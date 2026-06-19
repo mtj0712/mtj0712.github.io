@@ -23,8 +23,7 @@ npm run preview    # preview the production build locally
 
 The site deploys to GitHub Pages from the `dist/` output. The base path in `vite.config.ts` must match the GitHub Pages URL:
 
-- If hosted at `https://mtj0712.github.io/personal_website/`, set `base: '/personal_website/'`
-- If using a custom domain at the root, set `base: '/'`
+- Hosted at `https://mtj0712.github.io` (repo name `mtj0712.github.io`), so `base: '/'`
 
 GitHub Pages doesn't support SPA routing natively — a `404.html` redirect trick or a custom domain with root hosting is required for TanStack Router to handle deep links correctly. See the [spa-github-pages](https://github.com/rafgraph/spa-github-pages) pattern.
 
