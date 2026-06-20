@@ -1,32 +1,35 @@
 @import "tailwindcss";
 
+/* Class-based dark mode variant for Tailwind utilities */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-  --color-accent: #aa3bff;
-  --color-accent-bg: rgba(170, 59, 255, 0.1);
-  --color-accent-border: rgba(170, 59, 255, 0.5);
-  --color-text: #6b6375;
-  --color-text-h: #08060d;
-  --color-bg: #fff;
-  --color-border: #e5e4e7;
-  --color-code-bg: #f4f3ec;
-  --color-social-bg: rgba(244, 243, 236, 0.5);
+  --color-accent: #8b5cf6;
+  --color-accent-bg: rgba(139, 92, 246, 0.08);
+  --color-accent-border: rgba(139, 92, 246, 0.35);
+  --color-text: #6b7280;
+  --color-text-h: #111827;
+  --color-bg: #ffffff;
+  --color-border: #e5e7eb;
+  --color-code-bg: #f3f4f6;
+  --color-social-bg: rgba(243, 244, 246, 0.8);
+  --color-surface: #f9fafb;
 
   --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-mono: ui-monospace, Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-accent: #c084fc;
-    --color-accent-bg: rgba(192, 132, 252, 0.15);
-    --color-accent-border: rgba(192, 132, 252, 0.5);
-    --color-text: #9ca3af;
-    --color-text-h: #f3f4f6;
-    --color-bg: #16171d;
-    --color-border: #2e303a;
-    --color-code-bg: #1f2028;
-    --color-social-bg: rgba(47, 48, 58, 0.5);
-  }
+html.dark {
+  --color-accent: #a78bfa;
+  --color-accent-bg: rgba(167, 139, 250, 0.1);
+  --color-accent-border: rgba(167, 139, 250, 0.35);
+  --color-text: #9ca3af;
+  --color-text-h: #f9fafb;
+  --color-bg: #0d0f14;
+  --color-border: #1f2937;
+  --color-code-bg: #161923;
+  --color-social-bg: rgba(31, 41, 55, 0.6);
+  --color-surface: #111318;
 }
 
 html {
@@ -35,8 +38,8 @@ html {
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: 18px;
-  line-height: 1.45;
-  letter-spacing: 0.18px;
+  line-height: 1.6;
+  letter-spacing: 0.15px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -49,4 +52,101 @@ html {
 
 body {
   margin: 0;
+}
+
+/* Smooth theme transitions */
+html,
+html *,
+html *::before,
+html *::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-accent) 0%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero background glow */
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -10%,
+    rgba(139, 92, 246, 0.12) 0%,
+    transparent 70%
+  );
+}
+
+html.dark .hero-glow {
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -10%,
+    rgba(167, 139, 250, 0.15) 0%,
+    transparent 70%
+  );
+}
+
+/* Button utilities */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.625rem;
+  background-color: var(--color-accent);
+  padding: 0.625rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  transition: opacity 150ms ease, transform 150ms ease;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.625rem;
+  border: 1.5px solid var(--color-border);
+  background-color: var(--color-surface);
+  padding: 0.625rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-h);
+  transition: border-color 150ms ease, color 150ms ease, transform 150ms ease;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.625rem;
+  padding: 0.625rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  transition: background-color 150ms ease, color 150ms ease;
+  text-decoration: none;
+}
+
+.btn-ghost:hover {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent);
 }

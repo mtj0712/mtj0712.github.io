@@ -7,7 +7,7 @@ A personal portfolio and blog site built with React and TanStack Router, hosted 
 - **Framework**: React + TanStack Router (file-based routing)
 - **Build tool**: Vite
 - **Hosting**: GitHub Pages (static, no server)
-- **Styling**: TBD
+- **Styling**: Tailwind CSS v4
 
 ## Development
 
