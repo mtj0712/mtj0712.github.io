@@ -22,7 +22,7 @@ export const Route = createFileRoute('/')({
 
         <h1 className="mb-4 text-5xl font-extrabold tracking-tight md:text-7xl">
           <span className="block text-[var(--color-text-h)]">Hi, I'm</span>
-          <span className="gradient-text block leading-tight">Matthew Jo</span>
+          <span className="gradient-text block leading-tight">Matthew (Hyunjoon) Jo</span>
         </h1>
 
         <p className="mb-4 text-base font-semibold text-[var(--color-text)]">

@@ -52,7 +52,7 @@ function RootComponent() {
             to="/"
             className="mr-auto font-bold tracking-tight text-[var(--color-text-h)] hover:text-[var(--color-accent)] transition-colors"
           >
-            Matthew Jo
+            Matthew (Hyunjoon) Jo
           </Link>
           {navLinks.slice(1).map(({ to, label }) => (
             <Link
@@ -82,7 +82,7 @@ function RootComponent() {
       </main>
       <footer className="border-t border-[var(--color-border)] px-6 py-8">
         <div className="flex flex-col items-center gap-1 text-sm text-[var(--color-text)]">
-          <span className="font-semibold text-[var(--color-text-h)]">Matthew Jo</span>
+          <span className="font-semibold text-[var(--color-text-h)]">Matthew (Hyunjoon) Jo</span>
           <span>© {new Date().getFullYear()} · Built with React &amp; TanStack Router</span>
         </div>
       </footer>
