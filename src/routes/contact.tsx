@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Notebook, MdCell, CodeCell } from '../components/notebook'
 
 const links = [
   {
@@ -38,45 +39,48 @@ const links = [
 
 export const Route = createFileRoute('/contact')({
   component: () => (
-    <div className="mx-auto w-full max-w-3xl px-6 py-16">
-      <div className="mb-12">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-accent)]">
-          Reach out
-        </p>
-        <h1 className="mb-3 text-4xl font-extrabold tracking-tight text-[var(--color-text-h)]">
+    <Notebook filename="contact">
+      <MdCell>
+        <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-[var(--color-text-h)]">
           Contact
         </h1>
         <p className="text-[var(--color-text)]">
           I'm always open to new projects and conversations.
         </p>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        {links.map(({ label, href, display, icon }) => (
-          <a
-            key={label}
-            href={href}
-            target={href.startsWith('http') ? '_blank' : undefined}
-            rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            className="group flex items-center gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-4 transition-all hover:border-[var(--color-accent-border)] hover:bg-[var(--color-accent-bg)]"
-          >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-code-bg)] text-[var(--color-text)] group-hover:bg-[var(--color-accent-bg)] group-hover:text-[var(--color-accent)] transition-colors">
-              {icon}
-            </span>
-            <div className="flex flex-col text-left">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text)]">
-                {label}
+      </MdCell>
+      <CodeCell n={1} code={`contact = {
+    "email":    "mtj0712@gmail.com",
+    "github":   "github.com/mtj0712",
+    "linkedin": "linkedin.com/in/mtj0712",
+}`} />
+      <MdCell>
+        <div className="flex flex-col gap-3">
+          {links.map(({ label, href, display, icon }) => (
+            <a
+              key={label}
+              href={href}
+              target={href.startsWith('http') ? '_blank' : undefined}
+              rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="group flex items-center gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] px-6 py-4 transition-all hover:border-[var(--color-accent-border)] hover:bg-[var(--color-accent-bg)]"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-code-bg)] text-[var(--color-text)] group-hover:bg-[var(--color-accent-bg)] group-hover:text-[var(--color-accent)] transition-colors">
+                {icon}
               </span>
-              <span className="text-sm font-medium text-[var(--color-text-h)] group-hover:text-[var(--color-accent)] transition-colors">
-                {display}
-              </span>
-            </div>
-            <svg className="ml-auto h-4 w-4 text-[var(--color-border)] group-hover:text-[var(--color-accent)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-        ))}
-      </div>
-    </div>
+              <div className="flex flex-col text-left">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text)]">
+                  {label}
+                </span>
+                <span className="text-sm font-medium text-[var(--color-text-h)] group-hover:text-[var(--color-accent)] transition-colors">
+                  {display}
+                </span>
+              </div>
+              <svg className="ml-auto h-4 w-4 text-[var(--color-border)] group-hover:text-[var(--color-accent)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          ))}
+        </div>
+      </MdCell>
+    </Notebook>
   ),
 })

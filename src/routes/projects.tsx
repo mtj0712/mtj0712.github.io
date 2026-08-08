@@ -1,32 +1,110 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useState, useEffect } from 'react'
+import { Notebook, MdCell, CodeCell } from '../components/notebook'
+import { NotebookRenderer, type IpynbData } from '../components/notebook-renderer'
 
-function EmptyState({ label }: { label: string }) {
+const OWNER = 'mtj0712'
+const REPO = 'research_replications'
+const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents`
+
+interface GHItem {
+  name: string
+  type: 'file' | 'dir' | 'symlink' | 'submodule'
+  download_url: string | null
+}
+
+interface NotebookEntry {
+  filename: string
+  data: IpynbData
+}
+
+async function loadNotebooks(): Promise<NotebookEntry[]> {
+  const rootRes = await fetch(API)
+  if (!rootRes.ok) throw new Error(`GitHub API ${rootRes.status}: ${rootRes.statusText}`)
+
+  const root: GHItem[] = await rootRes.json()
+  const dirs = root.filter(item => item.type === 'dir' && !item.name.startsWith('.'))
+
+  const perDir = await Promise.all(
+    dirs.map(async dir => {
+      const res = await fetch(`${API}/${dir.name}`)
+      if (!res.ok) return []
+      const items: GHItem[] = await res.json()
+
+      return Promise.all(
+        items
+          .filter(item => item.type === 'file' && item.name.endsWith('.ipynb') && item.download_url)
+          .map(async file => {
+            const res = await fetch(file.download_url!)
+            if (!res.ok) return null
+            const data: IpynbData = await res.json()
+            return { filename: file.name.replace(/\.ipynb$/, ''), data }
+          }),
+      )
+    }),
+  )
+
+  return perDir
+    .flat()
+    .filter((nb): nb is NotebookEntry => nb !== null)
+    .sort((a, b) => a.filename.localeCompare(b.filename))
+}
+
+function ProjectsPage() {
+  const [notebooks, setNotebooks] = useState<NotebookEntry[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    loadNotebooks()
+      .then(setNotebooks)
+      .catch(e => setError(e instanceof Error ? e.message : String(e)))
+      .finally(() => setLoading(false))
+  }, [])
+
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-8 py-20 text-center">
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--color-accent-bg)]">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-        </svg>
-      </div>
-      <p className="mb-1 font-semibold text-[var(--color-text-h)]">{label}</p>
-      <p className="text-sm text-[var(--color-text)]">Check back soon.</p>
-    </div>
+    <>
+      <Notebook filename="projects">
+        <MdCell>
+          <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-[var(--color-text-h)]">
+            Projects
+          </h1>
+          <p className="text-[var(--color-text)]">
+            Research replications and experiments — rendered live from{' '}
+            <a
+              href={`https://github.com/${OWNER}/${REPO}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--color-accent)] underline underline-offset-2"
+            >
+              {OWNER}/{REPO}
+            </a>
+            .
+          </p>
+        </MdCell>
+        {loading && (
+          <CodeCell
+            n={1}
+            code={`notebooks = fetch_from_github("${OWNER}/${REPO}")\n# Loading...`}
+          />
+        )}
+        {error && (
+          <CodeCell
+            n={1}
+            code={`# Failed to load notebooks\nraise ConnectionError("${error}")`}
+          />
+        )}
+        {!loading && !error && notebooks.length === 0 && (
+          <CodeCell n={1} code="notebooks = []  # no .ipynb files found" />
+        )}
+      </Notebook>
+      {notebooks.map(nb => (
+        <NotebookRenderer key={nb.filename} filename={nb.filename} data={nb.data} defaultOpen={false} />
+      ))}
+    </>
   )
 }
 
 export const Route = createFileRoute('/projects')({
-  component: () => (
-    <div className="mx-auto w-full max-w-3xl px-6 py-16">
-      <div className="mb-12">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-accent)]">
-          Portfolio
-        </p>
-        <h1 className="mb-3 text-4xl font-extrabold tracking-tight text-[var(--color-text-h)]">
-          Projects
-        </h1>
-        <p className="text-[var(--color-text)]">Things I've built and shipped.</p>
-      </div>
-      <EmptyState label="Projects coming soon" />
-    </div>
-  ),
+  component: ProjectsPage,
 })
